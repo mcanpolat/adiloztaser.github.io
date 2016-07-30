@@ -1,0 +1,130 @@
+---
+layout: post
+title: Django REST Framework - Get Data
+date: 2015-09-20 15:26:37.000000000 +03:00
+type: post
+published: true
+status: publish
+categories:
+- Django
+- Python
+tags:
+- django
+- django rest api
+- django rest framework
+- django rest framework kullanımı
+meta:
+  _edit_last: '1'
+  _oembed_2aac138e47cd2c929b35d3830eb40d6e: "{{unknown}}"
+  dsq_thread_id: '4147391107'
+  _aioseop_description: Django ile web servis oluşturmamıza olanak sağlayan REST Framework
+    paketinin kullanımını basit anlamda anlattığım blog yazım.
+  _aioseop_title: Django REST Framework - Get Data
+  _aioseop_keywords: django,django rest api,django rest framework,django rest framework
+    kullanımı
+author:
+  login: admin
+  email: a@oztaser.com
+  display_name: admin
+  first_name: Adil
+  last_name: ÖZTAŞER
+---
+<p><strong>Django</strong> ile web servisleri gelişmeye olanak sağlayan <strong>Django REST Framework</strong> ile çok ufak bir uygulama yazdım. Aslına bakılırsa django ile ilk web servis denemem oldu. Yazdığım bu ufak veri çeken uygulamayı sizlerle adım adım uygulamak istedim. Dediğim gibi daha bende emekleme aşamasındayım şimdilik sadece verilerimizi çekebileceğiz :) .</p>
+<p>Öncelikle <strong>Django REST Framework</strong> sitesinde <a href="http://www.django-rest-framework.org/#installation">şu</a> linkte bahsedilen gerekli paketlerin kurulumları yapalım.</p>
+<pre class="brush:bash">
+pip install djangorestframework
+pip install markdown
+pip install django
+</pre>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/09/rest-framework1.png"><img class="aligncenter wp-image-83 " src="{{ site.baseurl }}/assets/rest-framework1.png" alt="rest-framework1" width="561" height="244" /></a></p>
+<p>Ardından bir django projesi ve uygulaması yaratalım.</p>
+<pre class="brush:bash">
+django-admin.py startproject RestFrameworkExample
+cd RestFrameworkExample
+python manage.py startapp library
+</pre>
+<p>Uygulamamızı ve REST Framework'ü settings dosyamızdaki INSTALLED_APPS kısmına ekleyelim.</p>
+<p>/Desktop/RestFrameworkExample/RestFrameworkExample/settings.py</p>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">
+    <pre>
+INSTALLED_APPS = (
+   .
+   .
+   .
+   'rest_framework',
+   'library'
+)
+</pre>
+</figure>
+<p>&nbsp;</p>
+<p>Bu aşamada oldukça basit bir Books modeli yazalım.</p>
+<p>/Desktop/RestFrameworkExample/library/models.py</p>
+<pre class="brush:python">
+from django.db import models
+
+class Books(models.Model):
+    name       = models.CharField(max_length=80)
+    summary    = models.TextField()
+    writer     = models.CharField(max_length=100)
+</pre>
+<p>Modelimizide yazdığımıza göre şimdi modelimizi yani tablolarımızı yaratalım.</p>
+<pre class="brush:bash">
+python manage.py syncdb
+</pre>
+<p>Uygulamamız altında bu seferde modelimiz için bir Serializer sınıfı yazalım.</p>
+<p>/Desktop/RestFrameworkExample/library/serializers.py</p>
+<pre class="brush:python">
+from library.models import Books
+from rest_framework import serializers
+
+class BookSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Books
+        fields = ('name', 'writer')
+
+</pre>
+<p>Şimdi views.py altında bir görünüm oluşturalım.</p>
+<p>/Desktop/RestFrameworkExample/library/views.py</p>
+<pre class="brush:python">
+from library.serializers import BookSerializer
+from library.models import Books
+
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework import status
+
+
+class BookList(views.APIView):
+    def get(self, request, format=None):
+        books = Books.objects.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+</pre>
+<p>Gördüğümüz gibi basit bir django view. Farklı olarak sadece REST Framework içindeki viewleri ve gerekli kütüphaneleri çağırıyoruz. Sınıfımız içinde ise  çektiğimiz verileri az önce oluşturmuş olduğumuz BookSerializera response ediyoruz. Ben bu aşamada sadece get işlemi yaptım. Ancak post işlemide yine bu class içinde def post adında bir method oluşturularak yapılmakta.</p>
+<p>Şuan sadece url dosyamıza servisimize erişim sağlayacağımız url'i eklememiz gerekiyor.</p>
+<p>/Desktop/RestFrameworkExample/RestFrameworkExample/urls.py</p>
+<pre class="brush:python">
+from django.conf.urls import patterns, url, include
+from rest_framework.urlpatterns import format_suffix_patterns
+from library import views
+from django.contrib import admin
+
+urlpatterns = patterns('',
+    url(r'^book/$', views.BookList.as_view()),
+    url(r'^admin/', include(admin.site.urls)),
+)
+urlpatterns = format_suffix_patterns(urlpatterns)
+</pre>
+<p>Son olarak ben veriler üzerinde işlemler yapmak için admini aktifleştirdim.</p>
+<p>Kitap listemizi json ve api formatında bize sunan web servisimiz şuan hazır.</p>
+<pre class="brush:bash">
+python manage.py runserver
+</pre>
+<p>Komutumuzla projeye can verelim ve http://127.0.0.1:8000/book/ adresini açalım.</p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/09/rest-framework2.png"><img class="aligncenter wp-image-95 " src="{{ site.baseurl }}/assets/rest-framework2.png" alt="rest-framework2" width="555" height="135" /></a></p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/09/rest-framework3.png"><img class="aligncenter wp-image-97" src="{{ site.baseurl }}/assets/rest-framework3.png" alt="rest-framework3" width="803" height="414" /></a></p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/09/rest-framework4.png"><img class="aligncenter wp-image-98" src="{{ site.baseurl }}/assets/rest-framework4.png" alt="rest-framework4" width="743" height="437" /></a> <a href="http://oztaser.com/wp-content/uploads/2015/09/rest-framework5.png"><img class="aligncenter size-full wp-image-99" src="{{ site.baseurl }}/assets/rest-framework5.png" alt="rest-framework5" width="476" height="181" /></a> <a href="http://oztaser.com/wp-content/uploads/2015/09/rest-framework6.png"><img class="aligncenter wp-image-100" src="{{ site.baseurl }}/assets/rest-framework6.png" alt="rest-framework6" width="802" height="362" /></a></p>
+<p>&nbsp;</p>
+<p>Django ile ilk REST Framework çalışmam bu şekilde. Umarım çok havada kalmamıştır. Açıkçası Türkçe kaynak bulamamıştım bu yüzden belki ilk defa bu olaya el atmak isteyenlere yol gösterir diye yazmak istedim. Öğrendikçe devamı gelecek özellikle post olayına bakacağım.</p>
+<p>Proje linki: <a href="https://github.com/oztaser/rest-framework-example">https://github.com/oztaser/rest-framework-example</a></p>

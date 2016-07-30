@@ -1,0 +1,113 @@
+---
+layout: post
+title: i3wm Maceram | Kurulum ve Kullandıklarım
+date: 2015-11-21 19:52:02.000000000 +02:00
+type: post
+published: true
+status: publish
+categories:
+- GNU/Linux
+tags:
+- i3wm
+- i3wm ağ yönetimi
+- i3wm arkplan ayarlama
+- i3wm güç tüketimi
+- i3wm kurulumu
+meta:
+  dsq_thread_id: '4339162966'
+  _edit_last: '1'
+  _oembed_3ff08877a94bc3325ba0b81acb3c07dd: "{{unknown}}"
+  _aioseop_description: i3wm kurulum aşamaları ve kullandığım programlar hakkında
+    yazdığım blog yazım.
+  _aioseop_title: i3wm Maceram | Kurulum ve Kullandıklarım
+  _aioseop_keywords: i3wm,i3wm kurulumu,i3wm arkplan ayarlama,i3wm güç tüketimi,i3wm
+    ağ yönetimi
+author:
+  login: admin
+  email: a@oztaser.com
+  display_name: admin
+  first_name: Adil
+  last_name: ÖZTAŞER
+---
+<p><strong><a href="https://istanbulhs.org/wiki/" target="_blank">İstanbul hackerspace</a></strong>'te katıldığım GNU/Linux eğitimi sonunda, uzun zamandır GNU/Linux kullanmama rağmen geliştirme yaptığım zamanlar dışındaki bilgisayar kullanımımda çok fazla terminali ve dolayısıyla komutları kullanmadığımı fark ettim.</p>
+<p class="ProfileHeaderCard-name">Xfce masaüstü ortamını severek kullansamda komutlarla biraz daha haşır neşir olmak için sıfır bir Debian üzerinde <strong><a href="https://i3wm.org/" target="_blank">i3wm</a></strong> kurarak maceraya atıldım. Tabi beni en çok çeken o havalı durum ve ufaktan <a href="https://twitter.com/barisbuyukakyol" target="_blank">Barış</a> abiye özenmemdi itirafını yapmazsam olmaz, anlayamazsınız 8-)</p>
+<p class="ProfileHeaderCard-name">Kurulum yaparken bağlı paketler konusunda baya sıkıntı yaşadığımı hatırlıyorum. İnşallah bir sıktıyla karşılaşmazsınız diyerek kurulumdan bahsedeyim biraz. Ama tabi bu işin güzel noktasınında o sıkıntılarla boğuşmak olduğunu eklemem gerek.</p>
+<pre class="brush:bash">
+echo 'deb http://build.i3wm.org/debian/sid sid main' &gt; /etc/apt/sources.list.d/i3-autobuild.list
+apt-get update
+apt-get --allow-unauthenticated install i3-autobuild-keyring
+apt-get update
+apt-get install i3
+</pre>
+<p>Direk kendi dökümanında yazanı kopyaladım. Yukarıdaki komutlar ile i3wm kurulumunu gerçekleştirebilirsiniz.</p>
+<p>Ancak sadece i3wm kurmak yetmiyor i3'ün yanında herhangi bir display manager (görüntü/ekran yöneticisi) kullanmamız gerekiyor. Ben <span class="headerpath"> <span class="title"> LightDM</span></span> kullanıyorum. Hakkında daha detaylı bilgiyi <a href="https://wiki.freedesktop.org/www/Software/LightDM/" target="_blank">bu</a> linkten bulabilirsiniz. Debian altında <span class="headerpath"><span class="title">LightDM kurulumuda şu şekilde:</span></span></p>
+<pre class="brush:bash">
+aptitude install lightdm
+</pre>
+<p>Eğer sıfırdan bir kurulum gerçekleştiriyorsanız lightdm servisi otomatik çalışacaktır. Ancak başka bir görüntü/ekran yöneticisi kullanıyor ve lightdm'ye geçmek istiyorsanız aşağıdaki komutlar ile onun servisini durdurup lightdm servisini başlatmalısınız. Farklı yöneticiler ile kurulum yapmadığım için sadece lightdm için yazıyorum. Diğer yöneticilerde de çok farklı işlemler olduğunu zannetmiyorum. Neyse komutlar aşağıda. İlk satırdaki komut aktif olan servisi durdurur, ikinci satırdaki komut ise lightdm servisini başlatır.</p>
+<pre class="brush:bash">
+systemctl mask görüntü/ekran yöneticisi.service
+systemctl enable lightdm.service
+</pre>
+<p><span class="headerpath"><span class="title">LightDM</span></span> servisinin çalışıp çalışmadığından emin olmak için aşağıdaki komutu çalıştırarak görüntülüyebilirsiniz.</p>
+<pre class="brush:bash">
+systemctl | grep lightdm
+</pre>
+<p>Çıktısı şu olmalı:</p>
+<pre class="brush:bash">
+lightdm.service                   loaded active running   Light Display Manager
+</pre>
+<p><span class="headerpath"><span class="title">LightDM</span></span>'in çalıştığından emin olduğumuza göre aşağıdaki komut ile ~/.xinirc içine exec i3 yazmamız gerekli.</p>
+<pre class="brush:bash">
+echo "exec i3" &gt; ~/.xinitrc
+</pre>
+<p>Son olarak <code>/etc/lightdm/lightdm.conf</code> dosyasında <code>user-session</code> satırını bulup <code>user-session=i3</code> şeklinde değiştirmemiz gerekmekte.</p>
+<p>Kurulum bu şekilde. i3wm'i bir çok şekilde özelleştirmek münkün bunun için daha detaylı bilgiyi resmi sitesinde bulabilirsiniz. Ben şimdi i3wm ile birlikte bilgisayar kullanımımı sürekli rayında tutan birkaç programdan bahsedeceğim.</p>
+<p><strong>Feh:</strong> Basit bir resim görüntüleme programı. Hem resim görüntülemek hemde arkaplan belirlemek için bu programı kullanıyorum. i3wm'i özelleştirdiğimiz config dosyamız /home/adil/.i3 bu yolda bulunmakta. Arkaplan atamak için bu dizindeki config dosyasını açıyoruz ve şu satırı ekliyoruz.</p>
+<pre class="brush:bash">
+exec --no-startup-id feh --bg-fill resim-yolu
+</pre>
+<p>Şu komut ilede programın kurulumunu yapabilirsiniz:</p>
+<pre class="brush:bash">
+apt-get install feh
+</pre>
+<p><strong>Nm-applet:  </strong>Ağ yönetimi yapmak için kullandığım program. Özellikle Wireless yönetimi açısından çok gerekli görüyorum. Kurulum içinde şu komutu kullanabilirsiniz:</p>
+<pre class="brush:bash">
+apt-get install network-manager-gnome
+</pre>
+<p id="locationline"><strong>PulseAudio</strong>: Ses ayarlarını yapmak için kullandığım program. Config dosyasında komutlarını çalıştırmak için kısayol tuşları atıyorum. Önce kuruluma bakalım şu komut ile kurulum yapılabilir:</p>
+<pre class="brush:bash">
+apt-get install pulseaudio
+</pre>
+<p>Config dosyama eklediğim aşağıdaki satırlar sayesinde $mod+F11 yaptığımda sistem sesi -10% değişmekte, $mod+F12 yaptığımda +10% artmakta ve $mod+F10 yaptığımda ise sistem sesi kapatılmakta.</p>
+<pre class="brush:bash">
+bindsym $mod+F11 exec pactl set-sink-volume 1 -- -10%
+bindsym $mod+F12 exec pactl set-sink-volume 1 -- +10%
+bindsym $mod+F10 exec pactl set-sink-mute 1 -- toggle
+</pre>
+<p><strong>Xfce4 Power Manager:  </strong>Güç tüketimi konusunda kullandığım bir uygulama öntanımlı gelen ayarlarıyla kullanıyorum. Bilgisayarım açıldığında arkaplanda çalışmaya başlıyor. Kurulum için şu komut kullanılabilir:</p>
+<pre class="brush:bash">
+apt-get install xfce4-power-manager
+</pre>
+<p>Config dosyama eklediğim şu satır ilede bilgisayarım açıldığında arkaplanda çalışmasını sağlıyorum.</p>
+<pre class="brush:bash">
+exec –no-startup-id sleep 3 &amp;&amp; xfce4-power-manager
+</pre>
+<p><strong>Tilda:  </strong>Öntanımlı gelen terminal yerine tilda kullanıyorum. Kurulum için şu komut iş görür:</p>
+<pre class="brush:bash">
+apt-get install tilda
+</pre>
+<p>Öntanımlı hale getirmek içinde config dosyasında # start a terminal satırını bulup altındaki satırı şu şekilde değiştirmemiz yeterli. Sadece tilda için değil diğer terminal programlarınıda bu değişikliği yaparak öntanımlı hale getirebilirsiniz. (Zaten anlaşılıyordur ama ekliyim dedim.)</p>
+<pre class="brush:bash">
+bindsym $mod+Return exec tilda
+</pre>
+<p>Şimdi fark ettim kısayollarından hiç bahsetmemişim klasik olarak her i3wm makalesinde olan resimleri usulca buraya yerleştirim zaten gayet açık bir şekilde kısayolları öğrenebilirsiniz.</p>
+<p><strong>$mod ile kullanılan kısayollar:<br />
+</strong></p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/11/keyboard-layer1.png"><img class="aligncenter size-full wp-image-186" src="{{ site.baseurl }}/assets/keyboard-layer1.png" alt="keyboard-layer1" width="900" height="300" /></a></p>
+<p><strong>Shift+$mod ile kullanılan kısayollar:</strong></p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/11/keyboard-layer2.png"><img class="aligncenter size-full wp-image-187" src="{{ site.baseurl }}/assets/keyboard-layer2.png" alt="keyboard-layer2" width="900" height="300" /></a></p>
+<p>&nbsp;</p>
+<p>Şimdilik yazacaklarım bunlarla sınırlı. 6 gün sonra tam 1 aydır i3wm kullanıyor olacağım bu dönemde açıkçası komutlarla iç içe bir şekilde çalıştım diyemiyorum. Oldukça kısa gelen bu zamanda tam anlamıyla istediğimi elde edememişim günlük bilgisayar kullanımındaki işlemler dışında pek yeni komut kullanmadım. Sanırım biraz daha derinlere girmek için bir tık daha efor sarf etmem gerekli. Ama i3wm ile çalışmak oldukça güzel ;) .</p>
+<p>i3wm ile ilk tecrübelerim bu yönde yanlış, eksik bir nokta var ise bilgilendiriseniz hem ben öğrenirim hemde burayı güncellerim. İlerleyen zamanda yeni tecrübeler edindikçe i3 ile ilgili yazmaya devam ederim inşallah.</p>
+<p>i3wm Döküman: <a href="http://i3wm.org/docs/">http://i3wm.org/docs/</a></p>

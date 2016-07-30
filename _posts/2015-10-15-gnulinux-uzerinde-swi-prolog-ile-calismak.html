@@ -1,0 +1,63 @@
+---
+layout: post
+title: GNU/Linux Üzerinde Swi-Prolog ile Çalışmak
+date: 2015-10-15 21:39:19.000000000 +03:00
+type: post
+published: true
+status: publish
+categories:
+- GNU/Linux
+tags:
+- linux prolog derleme
+- linux swi-prolog
+- swi-prolog
+meta:
+  _edit_last: '1'
+  dsq_thread_id: '4228347189'
+  _aioseop_title: GNU/Linux Üzerinde Swi-Prolog ile Çalışmak
+  _aioseop_description: GNU/Linux üzerinde Swi-Prolog derlenmesi konusunda yazdığım
+    blog yazım.
+  _aioseop_keywords: swi-prolog,linux swi-prolog,linux prolog derleme
+author:
+  login: admin
+  email: a@oztaser.com
+  display_name: admin
+  first_name: Adil
+  last_name: ÖZTAŞER
+---
+<p>Zeki Sistemler dersinin bir bölümünde Prolog programlama dilini göreceğim. Derleyici olarakta Swi-Prolog üzerinde çalışacağız. Ancak zaten çok fazla Türkçe kaynak olmayan bu konuda GNU/Linux ile ilgili herhangi bir yazının bulunmaması (ya da benim o kaynaklara ulaşamamam) canımı sıktı ve azıcıkta olsa birşeyler karalamak istedim.</p>
+<p>Çokta öğrenmek istemediğim bu konuda oturup dilin anlatımını yapamayacağım. Konu sadece GNU/Linux üzerinde derleme işlemi için Türkçe bir kaynak oluşturmak.</p>
+<p><a href="http://www.swi-prolog.org/build/LinuxDistro.html">Bu link</a> üzerinden farklı GNU/Linux dağıtımları hakkında ingilizce kaynak bulabilirsiniz.</p>
+<p><a href="http://www.swi-prolog.org/build/Debian.html">Bu adresten</a> ise Debian hakkında ingilizce kaynak bulabilirsiniz.</p>
+<p>Ben stable versiyon üzerinde çalışmayı herzaman daha uygun buluyorum ve onun kurulumundan bahsedeceğim. Daha doğrusu onun kodlarını paylaşıyorum:</p>
+<pre class="brush:bash">
+% sudo apt-add-repository ppa:swi-prolog/stable
+% sudo apt-get update
+% sudo apt-get install swi-prolog
+</pre>
+<p>Bu komutlarla kurulumu tamamladıktan sonra terminalde</p>
+<pre class="brush:bash">
+swipl
+</pre>
+<p>komutu verelim. Swi-Prolog bizi ekrandaki şu mesaj ile karşılayacak.</p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/10/swi-prolog1.png"><img class="aligncenter wp-image-150" src="{{ site.baseurl }}/assets/swi-prolog1.png" alt="swi-prolog1" width="820" height="370" /></a></p>
+<p>&nbsp;</p>
+<pre class="brush:bash">
+emacs('dosyaadi.pl').
+</pre>
+<p>komutunu vererek editörümüzü açalım ve aşağıdaki kodları yazalım. Ardından dosyamızı kaydedelim.</p>
+<pre class="brush:bash">
+verir(ali,ders).
+verir(ali,seminer).
+verir(oya,ders).
+verir(hasan,ders).
+hoca(X):-verir(X,ders).
+</pre>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/10/swi-prolog2.png"><img class="aligncenter size-full wp-image-153" src="{{ site.baseurl }}/assets/swi-prolog2.png" alt="swi-prolog2" width="697" height="266" /></a></p>
+<p>Kodlarımızıda yazdıktan sonra Complie menüsü altından Make diyelim ve terminale geçip ne gibi bir değişiklik olduğunu izleyelim.</p>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/10/swi-prolog3.png"><img class="aligncenter size-full wp-image-155" src="{{ site.baseurl }}/assets/swi-prolog3.png" alt="swi-prolog3" width="578" height="111" /></a> Gördüğümüz gibi herhangi bir hatamız olmadığı için yeşil bir mesajla karşılaştık yani yazdığımız kod derlendi. Şimdi şu komut ile programı test etmek için ders verenlerin listesini isteyelim:</p>
+<pre class="brush:bash">
+verir(X,ders).
+</pre>
+<p><a href="http://oztaser.com/wp-content/uploads/2015/10/swi-prolog4.png"><img class="aligncenter size-full wp-image-156" src="{{ site.baseurl }}/assets/swi-prolog4.png" alt="swi-prolog4" width="195" height="95" /></a></p>
+<p>Bu şekilde derleme işlemimizin sonuna geldik. Başka çokça belirttiğim gibi yazının amacı sadece GNU/Linux üzerinde Swi-Prolog derlenmesini göstermekti dolayısıyla en azından benim gibi giriş seviyesinde bir Prolog bilgisine sahip olmanızı beklemekteyim. Hade eyvallah.</p>
