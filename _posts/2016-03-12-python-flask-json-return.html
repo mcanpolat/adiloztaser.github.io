@@ -5,29 +5,12 @@ date: 2016-03-12 22:21:24.000000000 +02:00
 type: post
 published: true
 status: publish
-categories:
-- Flask
-- Python
-tags:
-- api
-- flask
-- json
-- python
-meta:
-  _edit_last: '1'
-  _wpcom_is_markdown: '1'
-  dsq_thread_id: '4657130040'
-author:
-  login: admin
-  email: a@oztaser.com
-  display_name: admin
-  first_name: Adil
-  last_name: ÖZTAŞER
 ---
 <p>Selam,</p>
 <p>Okulda proje olarak yazmam gereken basit android sözlük uygulamasında ne kullanırım da kendime yeni bir şeyler katabilirim diye düşünürken; <strong>redis</strong> kullanmayı ve <strong>flask</strong> ile bir <strong>api</strong> yazıp biraz fantezi yapıyım istedim (Ne kadar fantezi oldu bilemiyorum ama yeni bir keşifti benim ki). Tabi biraz da Java'yı sevmemen ve idelerden nefret etmemde ufakta olsa bu projede de python yazma isteği uyandırdı.</p>
 <p>Bu yazıda da neyi nasıl anlatsam pek bilemedim ama flask oldukça basit bir yapıya sahip. Bu yüzden sadece sayfada nasıl json return edileceğini gösterip usulca uzuyorum.</p>
-<pre class="brush:python">#!api/bin/python
+{% highlight python %}
+#!api/bin/python
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify
 import redis
@@ -40,10 +23,11 @@ redis = redis.StrictRedis(host='localhost', port=6379, db=1)
 def get_mean(w):
     key = redis.keys('%s' % w)
     if(len(key) &gt; 0):
-        return jsonify({ 'mean' : str(redis.get(w).decode('unicode-escape').encode("iso8859_9")) , 'word' : w })
+        return jsonify({ 'mean' : str(redis.get(w).decode('unicode-escape')
+        .encode("iso8859_9")) , 'word' : w })
     else:
         return jsonify({ 'error' : '404' })
 
 if __name__ == '__main__':
     app.run(debug=True)
-</pre>
+{% endhighlight %}

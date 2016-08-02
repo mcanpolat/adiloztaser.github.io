@@ -5,52 +5,40 @@ date: 2016-03-20 12:40:30.000000000 +02:00
 type: post
 published: true
 status: publish
-categories:
-- GNU/Linux
-tags:
-- i3-wm pulseaudio
-- pulse analog output
-- pulseaudio
-- set analog output
-meta:
-  _edit_last: '1'
-  dsq_thread_id: '4677840781'
-author:
-  login: admin
-  email: a@oztaser.com
-  display_name: admin
-  first_name: Adil
-  last_name: ÖZTAŞER
 ---
 <p>Selam,</p>
 <p>Yine sıkılarak i3-wm'e geçmemle birlikte kulaklığım ile iligi bir problem yaşadım. Kulaklığım analog çıkışından ses veriyordu. Gerçi Xfce kullanırken de bu sıkıntı vardı ama pek takıntı etmeyip her kulaklık takışımda PulseAudio arayüzünden outputu analog olarak değiştiriyordum. Madem sistemle uğraşıyorum şu sorunuda bir çözüme kavuşturayım istedim ve bu durumda bu yazıyı yazmama vesile oldu.</p>
 <p>Öncelikle aşağıdaki komutu kullanarak analog çıkışı yapan kartın numarasını öğreniyoruz:</p>
-<pre class="brush:bash">$ aplay -l
-</pre>
-<p><a href="http://oztaser.com/wp-content/uploads/2016/03/pulse.png" rel="attachment wp-att-267"><img class="size-full wp-image-267 aligncenter" src="{{ site.baseurl }}/assets/pulse.png" alt="pulse" width="766" height="299" /></a></p>
+{% highlight bash %}
+$ aplay -l
+{% endhighlight %}
+<p><img src="{{ site.baseurl }}/assets/pulse.png" /></p>
 <p>Resimde de görüldüğü üzre benim analog çıkışım card 1 üzerindenmiş bunu bir yere not alalım.</p>
 <p>Şimdi bu kartın active profile değerini almamız gerekiyor. Bunun için:</p>
-<pre class="brush:bash">$ pacmd list
-</pre>
+{% highlight bash %}
+$ pacmd list
+{% endhighlight %}
 <p>Bu komutu kullanmalıyız. Ancak baya uzun bir çıktı verdiği ve düzgün bir arama yapamadığımız için çıktıyı bir dosyaya yazalım, dosyayı nano ile açıp aramayı daha kolay bir şekilde yapalım:</p>
-<pre class="brush:bash">$ pacmd list &gt; list.txt
+{% highlight bash %}
+$ pacmd list &gt; list.txt
 $ nano list.txt
-</pre>
+{% endhighlight %}
 <p>Nano da arama yapmak içinde ^W kısayolunu kullanıp active profile kelimesini aratalım. Burada dikkat edilmesi gereken nokta analog çıkışı yapan kartın indexine bakıyor olmamız. Benim kartım'ın numarası 1 olduğu için index 1 olan active profilea bakmam gerekiyor.</p>
-<p><a href="http://oztaser.com/wp-content/uploads/2016/03/pulse2.png" rel="attachment wp-att-271"><img class="wp-image-271 aligncenter" src="{{ site.baseurl }}/assets/pulse2.png" alt="pulse2" width="883" height="398" /></a></p>
+<p><img src="{{ site.baseurl }}/assets/pulse2.png" /></p>
 <p>Burada bizim için gerekli olan şey &lt;output:analog-stereo&gt; çıktısı. Son olarak yapmamız gereken pulse default ayarlarımızda card profilimizi tanımlamak bunun için /etc/pulse/ dizinindeki default.pa dosyasını açıp sonuna şu satırı eklememiz gerekiyor:</p>
-<pre class="brush:bash">set-card-profile 1 output:analog-stereo
-</pre>
+{% highlight bash %}
+set-card-profile 1 output:analog-stereo
+{% endhighlight %}
 <p>Buradaki 1 değeri kart numaramız. analog-stereo değeri ise active profile değerimiz. Bunları kendi sisteminizdeki çıktılara göre düzenlemeniz gerekiyor.</p>
 <p>Ses kontrolünü pulse ile konsoldan yapmak için şu komutları kullanabilirsiniz:</p>
-<pre class="brush:bash">
+{% highlight bash %}
 $ amixer -D pulse sset Master 10%-
 $ amixer -D pulse sset Master 10%+
 $ amixer -D pulse sset Master toggle
-</pre>
+{% endhighlight %}
 <p>Son olarak i3-wm üzerinden atadığım kısayolları da yazıp bu problemide noktalayalım.</p>
-<pre class="brush:bash">
-bindsym $mod+F11 exec amixer -D pulse sset Master 10%- 
+{% highlight bash %}
+bindsym $mod+F11 exec amixer -D pulse sset Master 10%-
 bindsym $mod+F12 exec amixer -D pulse sset Master 10%+
 bindsym $mod+F10 exec amixer -D pulse sset Master toggle
-</pre>
+{% endhighlight %}
