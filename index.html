@@ -1,13 +1,23 @@
 ---
 layout: default
+description: Özgür yazılımcı.
 ---
-<ul class="page post-list">
-    {% for post in site.posts %}
-      <li>
-          <div class="post-date">{{ post.date | date_to_string }} &raquo;</div>
-          <div class="post-title">
-              <a href="{{ post.url }}">{{ post.title }}</a>
-          </div>
-      </li>
-    {% endfor %}
-</ul>
+<div class="header">
+    <h1>{{ site.name }}</h1>
+    <ul>
+        <li><a href="/">home</a></li>
+        <li><a href="/me">about</a></li>
+        {% for item in site.data.navigation %}
+        <li><a target="_blank" href="{{ item.url }}">{{ item.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="blog">
+    <ul>
+        {% for post in site.posts %}
+        <li>
+            <span class="date">{{ post.date | date: '%Y %b %d' }}</span> - <a href="{{ post.url }}">{{ post.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

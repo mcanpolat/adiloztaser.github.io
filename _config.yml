@@ -1,29 +1,22 @@
-# General Jekyll Config
-permalink: /:title/
-paginate_path: /page/:num/
+# Blog settings
+permalink: /blog/:title
+
+
+# My variables
+name: Adil ÖZTAŞER
+description: Özgür yazılımcı.
+tags: adil,adil öztaşer,öztaşer,django,gnu/linux,özgür yazılım
+
+
+# Sass
+sass:
+  style: :compressed
+  sass_dir: _sass
+
+
+# Markdown
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
 highlighter: rouge
-lsi: false
-gems:
-  - jekyll-sitemap
-  - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-gist
-
-gist:
-  noscript: false
-
-exclude: [LICENSE, CNAME, README.md, .gitignore, Gemfile, Gemfile.lock]
-timezone: 'Europe/Istanbul'
-encoding: 'utf-8'
-
-# Setup
-title:            Adil ÖZTAŞER
-tagline:          Blog
-description:      ""
-url:              https://oztaser.com
-
-author:
-  name:           'Adil ÖZTAŞER'
-  url:            'http://oztaser.com'
-  email:          'a@oztaser.com'
-  twitter:	      'http://twitter.com/adiloztaser'

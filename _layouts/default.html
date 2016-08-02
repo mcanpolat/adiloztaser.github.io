@@ -1,33 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ page.title }} - {{ site.data.theme.title }}</title>
-  <link rel="shortcut icon" href="http://localhost/oztaser/wp-content/themes/theme/favicon.ico" />
-  <meta name="author" content="{{ site.data.theme.name }}" />
-  <meta name="description" content="{{ site.data.theme.name }}" />
-  <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/assets/css/all.css" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    {% if page.title %}<title>{{ page.title }} - {{ site.name }}</title>{% else %}<title>{{ site.name }} - Özgür Yazılımcı</title>{% endif %}
+    {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+    <meta name="author" content="Adil ÖZTAŞER">
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" />
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
 </head>
 <body>
-<div class="grid grid-pad">
-  <div class="col-1-1">
-      <div class="site-title"><h1><a href="{{ site.data.theme.url }}">Adil ÖZTAŞER</a></h1></div>
-      <div class="site-menu">
-    		<ul>
-    			<div class="menu-header-container">
-                    <ul id="menu-header" class="menu">
-                        <li><a target="_blank" href="http://twitter.com/adiloztaser">twitter</a></li>
-                        <li><a target="_blank" href="https://github.com/adiloztaser">github</a></li>
-                    </ul>
-                </div>
-            </ul>
-    	</div>
-        <div style="clear:both;"></div>
-      {{ content }}
+    <div class="wrapper">
+        {{ content }}
     </div>
-  </div>
 </body>
 </html>
